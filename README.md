@@ -1,4 +1,3 @@
-# Resilient git init
 
 A production-ready Go microservice designed to fetch, aggregate, and serve the current price of Bitcoin (BTC) in USD.
 
