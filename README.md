@@ -16,7 +16,6 @@ This service demonstrates clean architecture, concurrency safety, and robust err
 
 ## 🛠 Prerequisites
 * [Docker](https://docs.docker.com/get-docker/)
-* [Docker Compose](https://docs.docker.com/compose/install/) (Recommended)
 * Go 1.22+ (Only if running tests locally without Docker)
 
 ---
