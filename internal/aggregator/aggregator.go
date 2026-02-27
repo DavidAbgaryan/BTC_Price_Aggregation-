@@ -39,7 +39,7 @@ func NewService(cfg *config.Config, providers []provider.PriceProvider) *Service
 	}
 }
 
-// Start runs the background poller
+// Start background poller
 func (s *Service) Start(ctx context.Context) {
 	ticker := time.NewTicker(s.config.PollInterval)
 	defer ticker.Stop()
@@ -135,7 +135,6 @@ func (s *Service) updateState(prices []float64) {
 	slog.Info("State updated", "price", median, "sources_used", len(prices))
 }
 
-// GetState safely reads the current state
 func (s *Service) GetState() models.PriceResponse {
 	s.mu.RLock()
 	defer s.mu.RUnlock()

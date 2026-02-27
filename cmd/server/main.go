@@ -22,12 +22,10 @@ func main() {
 
 	cfg := config.Load()
 
-	// Share a single HTTP client with connection pooling
 	httpClient := &http.Client{
 		Timeout: 5 * time.Second, // Global fallback timeout
 	}
 
-	// Setup Dependency Injection
 	providers := []provider.PriceProvider{
 		&provider.Coinbase{HTTPClient: httpClient},
 		&provider.Kraken{HTTPClient: httpClient},
@@ -36,7 +34,6 @@ func main() {
 	aggService := aggregator.NewService(cfg, providers)
 	mux := api.NewServer(aggService)
 
-	// Create a context that listens for OS termination signals
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -48,7 +45,6 @@ func main() {
 		Handler: mux,
 	}
 
-	// Start HTTP server
 	go func() {
 		slog.Info("Server listening", "port", cfg.Port)
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -57,16 +53,14 @@ func main() {
 		}
 	}()
 
-	// Wait for interrupt signal for graceful shutdown
+	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	slog.Info("Shutting down server gracefully...")
 
-	// Cancel context to stop background pollers
 	cancel()
 
-	// Shutdown HTTP server with timeout
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer shutdownCancel()
 
